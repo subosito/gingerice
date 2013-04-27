@@ -27,6 +27,8 @@ Or install it yourself as:
 
     # or you can:
     #
+    # require 'gingerice/tool'
+    #
     # Gingerice::Tool.check text
 
     # output:
