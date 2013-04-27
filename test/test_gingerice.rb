@@ -26,4 +26,13 @@ class TestGingerice < Test::Unit::TestCase
     assert_equal custom_parser.api_version, '1.0'
     assert_equal custom_parser.api_key, '123456'
   end
+
+  def test_parsed_results
+    text   = 'The smelt of fliwers bring back memories.'
+    result = @parser.parse(text)
+
+    assert_equal result['text'], text
+    assert_equal result['result'], 'The smell of flowers brings back memories.'
+    assert_equal result['corrections'].count, 3
+  end
 end

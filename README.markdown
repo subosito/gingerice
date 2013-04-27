@@ -1,6 +1,6 @@
 # Gingerice
 
-TODO: Write a gem description
+Ruby wrapper of Ginger Proofreader which corrects spelling and grammar mistakes based on the context of complete sentences by comparing each sentence to billions of similar sentences from the web.
 
 ## Installation
 
@@ -18,7 +18,48 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    require 'gingerice'
+
+    text   = 'The smelt of fliwers bring back memories.'
+
+    parser = Gingerice::Parser.new
+    parser.parse text
+
+    # or you can:
+    #
+    # Gingerice::Tool.check text
+
+    # output:
+    #
+    # => {
+    #     "text" => "The smelt of fliwers bring back memories.",
+    #     "result" => "The smell of flowers brings back memories.",
+    #     "corrections" => [
+    #         [0] {
+    #                 "text" => "smelt",
+    #             "correct" => "smell",
+    #             "definition" => nil
+    #         },
+    #         [1] {
+    #                 "text" => "fliwers",
+    #             "correct" => "flowers",
+    #             "definition" => "a plant cultivated for its blooms or blossoms"
+    #         },
+    #         [2] {
+    #                 "text" => "bring",
+    #             "correct" => "brings",
+    #             "definition" => nil
+    #         }
+    #     ]
+    # }
+
+This gem also provides executable which can be executed:
+
+    % gingerice "Edwards will be sick yesterday"
+
+    # output :
+    #
+    # Edwards was sick yesterday
 
 ## Contributing
 
@@ -27,3 +68,7 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Thanks
+
+Thank you for [Ginger Proofreader](http://www.gingersoftware.com/) for such awesome service. Hope they will keep it free :)

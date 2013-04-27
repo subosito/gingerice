@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Gingerice::VERSION
   spec.authors       = ["Alif Rachmawadi"]
   spec.email         = ["subosito@gmail.com"]
-  spec.description   = %q{Write a gem description}
-  spec.summary       = %q{Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = %q{Corrects spelling and grammar mistakes based on the context of complete sentences.}
+  spec.summary       = gem.description
+  spec.homepage      = "https://github.com/subosito/gingerice"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
