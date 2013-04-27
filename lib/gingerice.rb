@@ -1,5 +1,2 @@
-require "gingerice/version"
-
-module Gingerice
-  # Your code goes here...
-end
+require 'gingerice/version'
+require 'gingerice/parser'

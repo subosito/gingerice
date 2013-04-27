@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+$:.unshift(File::join(File::dirname(File::dirname(__FILE__)), "lib"))
+
+require 'gingerice/parser'
+require 'gingerice/tool'
+
+STDOUT.puts(Gingerice::Tool.check(ARGV.shift)['result'])
+
