@@ -38,18 +38,18 @@ Or install it yourself as:
     #     "result" => "The smell of flowers brings back memories.",
     #     "corrections" => [
     #         [0] {
-    #                 "text" => "smelt",
-    #             "correct" => "smell",
+    #                   "text" => "smelt",
+    #                "correct" => "smell",
     #             "definition" => nil
     #         },
     #         [1] {
-    #                 "text" => "fliwers",
-    #             "correct" => "flowers",
+    #                   "text" => "fliwers",
+    #                "correct" => "flowers",
     #             "definition" => "a plant cultivated for its blooms or blossoms"
     #         },
     #         [2] {
-    #                 "text" => "bring",
-    #             "correct" => "brings",
+    #                   "text" => "bring",
+    #                "correct" => "brings",
     #             "definition" => nil
     #         }
     #     ]
@@ -57,7 +57,7 @@ Or install it yourself as:
 
 This gem also provides executable which can be executed:
 
-    % gingerice "Edwards will be sick yesterday"
+    % gingerice "Edwards will be sck yesterday"
 
     # output :
     #
@@ -74,3 +74,4 @@ This gem also provides executable which can be executed:
 ## Thanks
 
 Thank you for [Ginger Proofreader](http://www.gingersoftware.com/) for such awesome service. Hope they will keep it free :)
+
