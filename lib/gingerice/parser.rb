@@ -11,15 +11,15 @@ module Gingerice
 
     attr_reader :lang, :api_key, :api_version, :api_endpoint
 
-    def initialize(lang = DEFAULT_LANG, api_key = GINGER_API_KEY, api_version = GINGER_VERSION, api_endpoint = GINGER_ENDPOINT)
-      @lang = lang
-      @api_key = api_key
-      @api_version = api_version
-      @api_endpoint = api_endpoint
+    def initialize(options = {})
+      @lang         = options.fetch(:lang, DEFAULT_LANG)
+      @api_key      = options.fetch(:api_key, GINGER_API_KEY)
+      @api_version  = options.fetch(:api_version, GINGER_VERSION)
+      @api_endpoint = options.fetch(:api_endpoint, GINGER_ENDPOINT)
     end
 
     def parse(text)
-      uri = Addressable::URI.parse(@api_endpoint)
+      uri = Addressable::URI.parse(api_endpoint)
       uri.query_values = request_params.merge({ 'text' => text })
 
       begin
@@ -63,9 +63,9 @@ module Gingerice
     protected
     def request_params
       {
-        'lang' => @lang,
-        'apiKey' => @api_key,
-        'clientVersion' => @api_version
+        'lang' => lang,
+        'apiKey' => api_key,
+        'clientVersion' => api_version
       }
     end
   end
