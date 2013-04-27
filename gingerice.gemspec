@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Alif Rachmawadi"]
   spec.email         = ["subosito@gmail.com"]
   spec.description   = %q{Corrects spelling and grammar mistakes based on the context of complete sentences.}
-  spec.summary       = gem.description
+  spec.summary       = spec.description
   spec.homepage      = "https://github.com/subosito/gingerice"
   spec.license       = "MIT"
 
