@@ -2,8 +2,15 @@
 
 $:.unshift(File::join(File::dirname(File::dirname(__FILE__)), "lib"))
 
-require 'gingerice/parser'
-require 'gingerice/tool'
+require 'gingerice/command'
 
-STDOUT.puts(Gingerice::Tool.check(ARGV.shift)['result'])
+args = ARGV.dup
+
+# default option
+if ARGV.empty?
+  args << '-h'
+end
+
+command = Gingerice::Command.new(args)
+command.execute
 

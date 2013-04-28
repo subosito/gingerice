@@ -20,22 +20,16 @@ Or install it yourself as:
 
     require 'gingerice'
 
-    text   = 'The smelt of fliwers bring back memories.'
+    text = 'The smelt of fliwers bring back memories.'
 
     parser = Gingerice::Parser.new
     parser.parse text
 
-    # or you can:
-    #
-    # require 'gingerice/tool'
-    #
-    # Gingerice::Tool.check text
-
     # output:
     #
     # => {
-    #     "text" => "The smelt of fliwers bring back memories.",
-    #     "result" => "The smell of flowers brings back memories.",
+    #            "text" => "The smelt of fliwers bring back memories.",
+    #          "result" => "The smell of flowers brings back memories.",
     #     "corrections" => [
     #         [0] {
     #                   "text" => "smelt",
@@ -62,6 +56,29 @@ This gem also provides executable which can be executed:
     # output :
     #
     # Edwards was sick yesterday
+
+Or if you want verbose output you can add `--verbose` or `-v` argument:
+
+    % gingerice --verbose "Edwards will be sck yesterday"
+
+    # output:
+    #
+    # {
+    #            "text" => "Edwards will be sck yesterday",
+    #          "result" => "Edwards was sick yesterday",
+    #     "corrections" => [
+    #         [0] {
+    #                   "text" => "will be",
+    #                "correct" => "was",
+    #             "definition" => nil
+    #         },
+    #         [1] {
+    #                   "text" => "sck",
+    #                "correct" => "sick",
+    #             "definition" => "affected by an impairment of normal physical or mental function"
+    #         }
+    #     ]
+    # }
 
 ## Contributing
 
