@@ -1,12 +1,26 @@
-require 'coveralls'
-Coveralls.wear!
+# require 'coveralls'
+# Coveralls.wear!
+
+require 'stringio'
+module Kernel
+  def capture_stdout
+    out = StringIO.new
+    $stdout = out
+    yield
+    return out
+  ensure
+    $stdout = STDOUT
+  end
+end
 
 require 'test/unit'
-require 'gingerice'
+require 'gingerice/parser'
+require 'gingerice/command'
 
 class TestGingerice < Test::Unit::TestCase
   def setup
     @parser = Gingerice::Parser.new
+
     @custom_parser = Gingerice::Parser.new({
       lang: 'ID',
       api_endpoint: 'http://example.id/',
@@ -42,4 +56,30 @@ class TestGingerice < Test::Unit::TestCase
     exception = assert_raise(StandardError) { @custom_parser.parse('Hllo') }
     assert_equal exception.message, 'getaddrinfo: Name or service not known'
   end
+
+  # FIXME: tests not working
+  # def test_command_show_version
+  #   output = capture_stdout do
+  #     command = Gingerice::Command.new(['--version'])
+  #     command.execute
+  #   end
+  #   assert_equal output.string, "1.0.0\n"
+  # end
+
+  # def test_command_usage
+  #   output = capture_stdout do
+  #     command = Gingerice::Command.new(["Edwards will be sck yesterday"])
+  #     command.execute
+  #   end
+  #   assert_equal output.string, "Edwards was sick yesterday\n"
+  # end
+
+  # def test_command_help
+  #   output = capture_stdout do
+  #     command = Gingerice::Command.new([])
+  #     command.execute
+  #   end
+  #   assert_match output.string, 'Usage:'
+  # end
 end
+

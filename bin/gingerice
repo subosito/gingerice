@@ -4,13 +4,6 @@ $:.unshift(File::join(File::dirname(File::dirname(__FILE__)), "lib"))
 
 require 'gingerice/command'
 
-args = ARGV.dup
-
-# default option
-if ARGV.empty?
-  args << '-h'
-end
-
-command = Gingerice::Command.new(args)
+command = Gingerice::Command.new(ARGV)
 command.execute
 

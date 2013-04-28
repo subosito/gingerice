@@ -6,7 +6,7 @@ require 'gingerice/version'
 module Gingerice
   class Command
 
-    attr_reader :args
+    attr_reader :args, :oparser
 
     def initialize(args)
       @args = args
@@ -20,7 +20,7 @@ module Gingerice
       options[:lang] = Gingerice::Parser::DEFAULT_LANG
       options[:verbose] = false
 
-      oparser = OptionParser.new do |opt|
+      @oparser = OptionParser.new do |opt|
         opt.banner = 'Usage: gingerice [options] "some texts"'
 
         opt.on("--api-endpoint API_ENDPOINT", "Set API endpoint") do |endpoint|
@@ -54,11 +54,16 @@ module Gingerice
         end
       end
 
-      oparser.parse!(args)
+      @oparser.parse!(args)
       options
     end
 
     def execute
+      if args.empty?
+        puts oparser
+        exit
+      end
+
       options = processor
       parser_options = options.reject { |key, value| key == :verbose }
 
