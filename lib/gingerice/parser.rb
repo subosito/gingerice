@@ -24,36 +24,7 @@ module Gingerice
 
       begin
         open(uri) do |stream|
-          content = stream.read
-          data    = JSON.parse(content)
-
-          i = 0
-          result = ''
-          corrections = []
-
-          data.fetch('LightGingerTheTextResult', []).each do |r|
-            from = r['From']
-            to   = r['To']
-
-            if i <= from
-              result += text[i..from-1] unless from.zero?
-              result += r['Suggestions'][0]['Text']
-
-              corrections << {
-                'text'       => text[from..to],
-                'correct'    => r['Suggestions'][0]['Text'],
-                'definition' => r['Suggestions'][0]['Definition']
-              }
-            end
-
-            i = to+1
-          end
-
-          if i < text.length
-            result += text[i..-1]
-          end
-
-          { 'text' => text, 'result' => result, 'corrections' => corrections}
+          response_processor(text, stream.read)
         end
       rescue Exception => e
         raise StandardError, e.message
@@ -61,6 +32,37 @@ module Gingerice
     end
 
     protected
+    def response_processor(text, content)
+      data = JSON.parse(content)
+      i = 0
+      result = ''
+      corrections = []
+
+      data.fetch('LightGingerTheTextResult', []).each do |r|
+        from = r['From']
+        to   = r['To']
+
+        if i <= from
+          result += text[i..from-1] unless from.zero?
+          result += r['Suggestions'][0]['Text']
+
+          corrections << {
+            'text'       => text[from..to],
+            'correct'    => r['Suggestions'][0]['Text'],
+            'definition' => r['Suggestions'][0]['Definition']
+          }
+        end
+
+        i = to+1
+      end
+
+      if i < text.length
+        result += text[i..-1]
+      end
+
+      { 'text' => text, 'result' => result, 'corrections' => corrections}
+    end
+
     def request_params
       {
         'lang' => lang,
