@@ -6,79 +6,98 @@ Ruby wrapper of Ginger Proofreader which corrects spelling and grammar mistakes 
 
 Add this line to your application's Gemfile:
 
-    gem 'gingerice'
+```ruby
+gem 'gingerice'
+```
 
 And then execute:
 
-    $ bundle
+```bash
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install gingerice
+```bash
+$ gem install gingerice
+```
 
 ## Usage
 
-    require 'gingerice'
+```ruby
+require 'gingerice'
 
-    text = 'The smelt of fliwers bring back memories.'
+text = 'The smelt of fliwers bring back memories.'
 
-    parser = Gingerice::Parser.new
-    parser.parse text
+parser = Gingerice::Parser.new
+parser.parse text
 
-    # output:
-    #
-    # => {
-    #            "text" => "The smelt of fliwers bring back memories.",
-    #          "result" => "The smell of flowers brings back memories.",
-    #     "corrections" => [
-    #         [0] {
-    #                   "text" => "smelt",
-    #                "correct" => "smell",
-    #             "definition" => nil
-    #         },
-    #         [1] {
-    #                   "text" => "fliwers",
-    #                "correct" => "flowers",
-    #             "definition" => "a plant cultivated for its blooms or blossoms"
-    #         },
-    #         [2] {
-    #                   "text" => "bring",
-    #                "correct" => "brings",
-    #             "definition" => nil
-    #         }
-    #     ]
-    # }
+```
+
+```
+# output:
+
+{
+           "text" => "The smelt of fliwers bring back memories.",
+         "result" => "The smell of flowers brings back memories.",
+    "corrections" => [
+        [0] {
+                  "text" => "smelt",
+               "correct" => "smell",
+            "definition" => nil
+        },
+        [1] {
+                  "text" => "fliwers",
+               "correct" => "flowers",
+            "definition" => "a plant cultivated for its blooms or blossoms"
+        },
+        [2] {
+                  "text" => "bring",
+               "correct" => "brings",
+            "definition" => nil
+        }
+    ]
+}
+```
 
 This gem also provides executable which can be executed:
 
-    % gingerice "Edwards will be sck yesterday"
+```bash
+$ gingerice "Edwards will be sck yesterday"
+```
 
-    # output :
-    #
-    # Edwards was sick yesterday
+```
+# output:
+
+Edwards was sick yesterday
+```
 
 Or if you want verbose output you can add `--verbose` or `-v` argument:
 
-    % gingerice --verbose "Edwards will be sck yesterday"
+```bash
+$ gingerice --verbose "Edwards will be sck yesterday"
+```
 
-    # output:
-    #
-    # {
-    #            "text" => "Edwards will be sck yesterday",
-    #          "result" => "Edwards was sick yesterday",
-    #     "corrections" => [
-    #         [0] {
-    #                   "text" => "will be",
-    #                "correct" => "was",
-    #             "definition" => nil
-    #         },
-    #         [1] {
-    #                   "text" => "sck",
-    #                "correct" => "sick",
-    #             "definition" => "affected by an impairment of normal physical or mental function"
-    #         }
-    #     ]
-    # }
+```
+# output:
+
+{
+           "text" => "Edwards will be sck yesterday",
+         "result" => "Edwards was sick yesterday",
+    "corrections" => [
+        [0] {
+                  "text" => "will be",
+               "correct" => "was",
+            "definition" => nil
+        },
+        [1] {
+                  "text" => "sck",
+               "correct" => "sick",
+            "definition" => "affected by an impairment of normal physical or mental function"
+        }
+    ]
+}
+```
 
 ## Contributing
 
