@@ -59,21 +59,21 @@ module Gingerice
     end
 
     def execute
+      options = processor
+
       if args.empty?
         puts oparser
-        exit
-      end
-
-      options = processor
-      parser_options = options.reject { |key, value| key == :verbose }
-
-      parser   = Parser.new(parser_options)
-      response = parser.parse(args.last)
-
-      if options[:verbose]
-        ap response
       else
-        puts response["result"]
+        parser_options = options.reject { |key, value| key == :verbose }
+
+        parser   = Parser.new(parser_options)
+        response = parser.parse(args.last)
+
+        if options[:verbose]
+          ap response
+        else
+          puts response["result"]
+        end
       end
     end
   end

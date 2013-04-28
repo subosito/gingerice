@@ -30,56 +30,47 @@ class TestGingerice < Test::Unit::TestCase
   end
 
   def test_default_settings
-    assert_equal @parser.api_endpoint, Gingerice::Parser::GINGER_ENDPOINT
-    assert_equal @parser.api_version, Gingerice::Parser::GINGER_VERSION
-    assert_equal @parser.api_key, Gingerice::Parser::GINGER_API_KEY
-    assert_equal @parser.lang, Gingerice::Parser::DEFAULT_LANG
+    assert_equal Gingerice::Parser::GINGER_ENDPOINT, @parser.api_endpoint
+    assert_equal Gingerice::Parser::GINGER_VERSION, @parser.api_version
+    assert_equal Gingerice::Parser::GINGER_API_KEY, @parser.api_key
+    assert_equal Gingerice::Parser::DEFAULT_LANG, @parser.lang
   end
 
   def test_override_settings
-    assert_equal @custom_parser.lang, 'ID'
-    assert_equal @custom_parser.api_endpoint, 'http://example.id/'
-    assert_equal @custom_parser.api_version, '1.0'
-    assert_equal @custom_parser.api_key, '123456'
+    assert_equal 'ID', @custom_parser.lang
+    assert_equal 'http://example.id/', @custom_parser.api_endpoint
+    assert_equal '1.0', @custom_parser.api_version
+    assert_equal '123456', @custom_parser.api_key
   end
 
   def test_parsed_results
     text   = 'The smelt of fliwers bring back memories.'
     result = @parser.parse(text)
 
-    assert_equal result['text'], text
-    assert_equal result['result'], 'The smell of flowers brings back memories.'
-    assert_equal result['corrections'].count, 3
+    assert_equal text, result['text']
+    assert_equal 'The smell of flowers brings back memories.', result['result']
+    assert_equal 3, result['corrections'].count
   end
 
   def test_exceptions
     exception = assert_raise(StandardError) { @custom_parser.parse('Hllo') }
-    assert_equal exception.message, 'getaddrinfo: Name or service not known'
+    assert_equal 'getaddrinfo: Name or service not known', exception.message
   end
 
-  # FIXME: tests not working
-  # def test_command_show_version
-  #   output = capture_stdout do
-  #     command = Gingerice::Command.new(['--version'])
-  #     command.execute
-  #   end
-  #   assert_equal output.string, "1.0.0\n"
-  # end
+  def test_command_usage
+    output = capture_stdout do
+      command = Gingerice::Command.new(["Edwards will be sck yesterday"])
+      command.execute
+    end
+    assert_equal "Edwards was sick yesterday\n", output.string
+  end
 
-  # def test_command_usage
-  #   output = capture_stdout do
-  #     command = Gingerice::Command.new(["Edwards will be sck yesterday"])
-  #     command.execute
-  #   end
-  #   assert_equal output.string, "Edwards was sick yesterday\n"
-  # end
-
-  # def test_command_help
-  #   output = capture_stdout do
-  #     command = Gingerice::Command.new([])
-  #     command.execute
-  #   end
-  #   assert_match output.string, 'Usage:'
-  # end
+  def test_command_help
+    output = capture_stdout do
+      command = Gingerice::Command.new([])
+      command.execute
+    end
+    assert_match "Usage:", output.string
+  end
 end
 
