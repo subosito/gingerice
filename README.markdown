@@ -107,6 +107,10 @@ $ gingerice --verbose "Edwards will be sck yesterday"
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
+## Ports
+
+- Python library by @Azd325: https://github.com/Azd325/gingerit
+
 ## Thanks
 
 Thank you for [Ginger Proofreader](http://www.gingersoftware.com/) for such awesome service. Hope they will keep it free :)
