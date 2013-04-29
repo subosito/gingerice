@@ -50,6 +50,8 @@ class TestGingerice < Test::Unit::TestCase
     assert_equal text, result['text']
     assert_equal 'The smell of flowers brings back memories.', result['result']
     assert_equal 3, result['corrections'].count
+    assert_equal 4, result['corrections'].first['start']
+    assert_equal 5, result['corrections'].first['length']
   end
 
   def test_exceptions

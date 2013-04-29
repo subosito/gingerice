@@ -49,7 +49,9 @@ module Gingerice
           corrections << {
             'text'       => text[from..to],
             'correct'    => r['Suggestions'][0]['Text'],
-            'definition' => r['Suggestions'][0]['Definition']
+            'definition' => r['Suggestions'][0]['Definition'],
+            'start'      => from,
+            'length'     => to.to_i - from.to_i + 1
           }
         end
 
