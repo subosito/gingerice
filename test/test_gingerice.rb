@@ -21,6 +21,7 @@ module Kernel
 end
 
 require 'test/unit'
+require 'gingerice'
 require 'gingerice/command'
 
 class TestGingerice < Test::Unit::TestCase
@@ -58,11 +59,6 @@ class TestGingerice < Test::Unit::TestCase
     assert_equal 3, result['corrections'].count
     assert_equal 4, result['corrections'].first['start']
     assert_equal 5, result['corrections'].first['length']
-  end
-
-  def test_exceptions
-    exception = assert_raise(StandardError) { @custom_parser.parse('Hllo') }
-    assert_equal 'getaddrinfo: Name or service not known', exception.message
   end
 
   def test_command_simple_output
@@ -123,6 +119,20 @@ class TestGingerice < Test::Unit::TestCase
     options = command.options
 
     assert_equal "ID", options[:lang]
+  end
+
+  def test_request_exceptions
+    exception = assert_raise(Gingerice::ConnectionError) { @custom_parser.parse('Hllo') }
+    assert_equal 'getaddrinfo: Name or service not known', exception.message
+  end
+
+  def test_parse_error_exceptions
+    invalid_parser = Gingerice::Parser.new({
+      api_endpoint: 'http://subosito.com/',
+    })
+
+    exception = assert_raise(Gingerice::ParseError) { invalid_parser.parse('Hllo') }
+    assert_match 'unexpected token', exception.message
   end
 end
 

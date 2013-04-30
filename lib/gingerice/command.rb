@@ -1,7 +1,6 @@
 require 'optparse'
 require 'awesome_print'
-require 'gingerice/parser'
-require 'gingerice/version'
+require 'gingerice'
 
 module Gingerice
   class Command

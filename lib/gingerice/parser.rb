@@ -1,6 +1,8 @@
 require 'open-uri'
 require 'addressable/uri'
 require 'json'
+require 'gingerice/version'
+require 'gingerice/error'
 
 module Gingerice
   class Parser
@@ -10,6 +12,7 @@ module Gingerice
     DEFAULT_LANG        = 'US'
 
     attr_accessor :lang, :api_key, :api_version, :api_endpoint
+    attr_reader   :text, :raw_response
 
     def initialize(options = {})
       merge_options(options).each do |key, value|
@@ -18,16 +21,9 @@ module Gingerice
     end
 
     def parse(text)
-      uri = Addressable::URI.parse(api_endpoint)
-      uri.query_values = request_params.merge({ 'text' => text })
-
-      begin
-        open(uri) do |stream|
-          response_processor(text, stream.read)
-        end
-      rescue Exception => e
-        raise StandardError, e.message
-      end
+      @text = text
+      perform_request
+      process_response
     end
 
     def self.default_options
@@ -48,43 +44,60 @@ module Gingerice
       Parser.default_options.merge(options)
     end
 
-    def response_processor(text, content)
-      data = JSON.parse(content)
-      i = 0
-      result = ''
-      corrections = []
+    def perform_request
+      uri = Addressable::URI.parse(api_endpoint)
+      uri.query_values = request_params.merge({ 'text' => text })
 
-      data.fetch('LightGingerTheTextResult', []).each do |r|
-        from = r['From']
-        to   = r['To']
+      begin
+        open(uri) do |stream|
+          @raw_response = stream.read
+        end
+      rescue Exception => e
+        raise ConnectionError, e.message
+      end
+    end
 
-        if i <= from
-          result += text[i..from-1] unless from.zero?
-          result += r['Suggestions'][0]['Text']
+    def process_response
+      begin
+        data = JSON.parse(raw_response)
+        i = 0
+        result = ''
+        corrections = []
 
-          definition = r['Suggestions'][0]['Definition']
+        data.fetch('LightGingerTheTextResult', []).each do |r|
+          from = r['From']
+          to   = r['To']
 
-          if definition.respond_to? :empty?
-            definition = nil if definition.empty?
+          if i <= from
+            result += text[i..from-1] unless from.zero?
+            result += r['Suggestions'][0]['Text']
+
+            definition = r['Suggestions'][0]['Definition']
+
+            if definition.respond_to? :empty?
+              definition = nil if definition.empty?
+            end
+
+            corrections << {
+              'text'       => text[from..to],
+              'correct'    => r['Suggestions'][0]['Text'],
+              'definition' => definition,
+              'start'      => from,
+              'length'     => to.to_i - from.to_i + 1
+            }
           end
 
-          corrections << {
-            'text'       => text[from..to],
-            'correct'    => r['Suggestions'][0]['Text'],
-            'definition' => definition,
-            'start'      => from,
-            'length'     => to.to_i - from.to_i + 1
-          }
+          i = to+1
         end
 
-        i = to+1
-      end
+        if i < text.length
+          result += text[i..-1]
+        end
 
-      if i < text.length
-        result += text[i..-1]
+        { 'text' => text, 'result' => result, 'corrections' => corrections}
+      rescue Exception => e
+        raise ParseError, e.message
       end
-
-      { 'text' => text, 'result' => result, 'corrections' => corrections}
     end
 
     def request_params
