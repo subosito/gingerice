@@ -62,10 +62,16 @@ module Gingerice
           result += text[i..from-1] unless from.zero?
           result += r['Suggestions'][0]['Text']
 
+          definition = r['Suggestions'][0]['Definition']
+
+          if definition.respond_to? :empty?
+            definition = nil if definition.empty?
+          end
+
           corrections << {
             'text'       => text[from..to],
             'correct'    => r['Suggestions'][0]['Text'],
-            'definition' => r['Suggestions'][0]['Definition'],
+            'definition' => definition,
             'start'      => from,
             'length'     => to.to_i - from.to_i + 1
           }

@@ -13,10 +13,34 @@ module Gingerice
       @args << '-h' if @args.empty?
 
       @options     = Gingerice::Parser.default_options.merge({ :verbose => false })
-      @args_parser = args_parser
+      @args_parser = parse_args
     end
 
-    def args_parser
+    def execute
+      if options.has_key?(:show)
+
+        case options[:show]
+        when :help
+          puts args_parser
+        when :version
+          puts "Gingerice: #{Gingerice::VERSION}"
+        end
+
+      else
+        parser_opts = options.select { |k, _| Parser.default_options.keys.include?(k) }
+        parser      = Parser.new(parser_opts)
+        response    = parser.parse(args.last)
+
+        if options[:verbose]
+          ap response
+        else
+          puts response["result"]
+        end
+      end
+    end
+
+    protected
+    def parse_args
       OptionParser.new do |opt|
         opt.banner = 'Usage: gingerice [options] "some texts"'
 
@@ -49,29 +73,6 @@ module Gingerice
         end
 
         opt.parse!(args)
-      end
-    end
-
-    def execute
-      if options.has_key?(:show)
-
-        case options[:show]
-        when :help
-          puts args_parser
-        when :version
-          puts "Gingerice: #{Gingerice::VERSION}"
-        end
-
-      else
-        parser_opts = options.select { |k, _| Parser.default_options.keys.include?(k) }
-        parser      = Parser.new(parser_opts)
-        response    = parser.parse(args.last)
-
-        if options[:verbose]
-          ap response
-        else
-          puts response["result"]
-        end
       end
     end
   end
