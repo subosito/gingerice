@@ -31,10 +31,10 @@ module Gingerice
 
     def self.default_options
       {
-        :api_endpoint => Gingerice::Parser::GINGER_API_ENDPOINT,
-        :api_version  => Gingerice::Parser::GINGER_API_VERSION,
-        :api_key      => Gingerice::Parser::GINGER_API_KEY,
-        :lang         => Gingerice::Parser::DEFAULT_LANG
+        :api_endpoint => GINGER_API_ENDPOINT,
+        :api_version  => GINGER_API_VERSION,
+        :api_key      => GINGER_API_KEY,
+        :lang         => DEFAULT_LANG
       }
     end
 
