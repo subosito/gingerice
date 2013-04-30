@@ -123,7 +123,7 @@ class TestGingerice < Test::Unit::TestCase
 
   def test_request_exceptions
     exception = assert_raise(Gingerice::ConnectionError) { @custom_parser.parse('Hllo') }
-    assert_equal 'getaddrinfo: Name or service not known', exception.message
+    assert_equal "ERROR: Couldn't connect to API endpoint (http://example.id/)", exception.message
   end
 
   def test_parse_error_exceptions
@@ -132,7 +132,7 @@ class TestGingerice < Test::Unit::TestCase
     })
 
     exception = assert_raise(Gingerice::ParseError) { invalid_parser.parse('Hllo') }
-    assert_match 'unexpected token', exception.message
+    assert_equal 'ERROR: We receive invalid JSON format!', exception.message
   end
 end
 
