@@ -105,7 +105,7 @@ module Gingerice
           'correct'    => data['Suggestions'][0]['Text'],
           'definition' => definition,
           'start'      => from,
-          'length'     => to.to_i - from.to_i + 1
+          'length'     => to - from + 1
         }
       end
     end
