@@ -21,7 +21,6 @@ module Kernel
 end
 
 require 'test/unit'
-require 'gingerice/parser'
 require 'gingerice/command'
 
 class TestGingerice < Test::Unit::TestCase
@@ -66,7 +65,7 @@ class TestGingerice < Test::Unit::TestCase
     assert_equal 'getaddrinfo: Name or service not known', exception.message
   end
 
-  def test_command_usage
+  def test_command_simple_output
     output = capture_stdout do
       command = Gingerice::Command.new(["Edwards will be sck yesterday"])
       command.execute
@@ -74,12 +73,56 @@ class TestGingerice < Test::Unit::TestCase
     assert_equal "Edwards was sick yesterday\n", output.string
   end
 
-  def test_command_help
+  def test_command_verbose_output
+    output = capture_stdout do
+      command = Gingerice::Command.new(["-v", "He flyed to Jakarta"])
+      command.execute
+    end
+    assert_match 'corrections', output.string
+  end
+
+  def test_command_help_usage
     output = capture_stdout do
       command = Gingerice::Command.new([])
       command.execute
     end
     assert_match "Usage:", output.string
+  end
+
+  def test_command_show_version
+    output = capture_stdout do
+      command = Gingerice::Command.new(['--version'])
+      command.execute
+    end
+    assert_equal "Gingerice: #{Gingerice::VERSION}\n", output.string
+  end
+
+  def test_command_arg_api_endpoint
+    command = Gingerice::Command.new(['--api-endpoint', 'http://example.id/'])
+    options = command.options
+
+    assert_equal "http://example.id/", options[:api_endpoint]
+  end
+
+  def test_command_arg_api_version
+    command = Gingerice::Command.new(['--api-version', '1.0'])
+    options = command.options
+
+    assert_equal "1.0", options[:api_version]
+  end
+
+  def test_command_arg_api_key
+    command = Gingerice::Command.new(['--api-key', '123456'])
+    options = command.options
+
+    assert_equal "123456", options[:api_key]
+  end
+
+  def test_command_arg_lang
+    command = Gingerice::Command.new(['--lang', 'ID'])
+    options = command.options
+
+    assert_equal "ID", options[:lang]
   end
 end
 

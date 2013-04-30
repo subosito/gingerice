@@ -6,17 +6,18 @@ require 'gingerice/version'
 module Gingerice
   class Command
 
-    attr_reader :args, :oparser
+    attr_reader :args, :args_parser, :options
 
     def initialize(args)
       @args = args
+      @args << '-h' if @args.empty?
+
+      @options     = Gingerice::Parser.default_options.merge({ :verbose => false })
+      @args_parser = args_parser
     end
 
-    def processor
-      options = Gingerice::Parser.default_options
-      options[:verbose] = false
-
-      @oparser = OptionParser.new do |opt|
+    def args_parser
+      OptionParser.new do |opt|
         opt.banner = 'Usage: gingerice [options] "some texts"'
 
         opt.on("--api-endpoint API_ENDPOINT", "Set API endpoint") do |endpoint|
@@ -24,7 +25,7 @@ module Gingerice
         end
 
         opt.on("--api-version API_VERSION", "Set API version") do |version|
-          options[:api_endpoint] = version
+          options[:api_version] = version
         end
 
         opt.on("--api-key API_KEY", "Set API key") do |api_key|
@@ -40,30 +41,31 @@ module Gingerice
         end
 
         opt.on("--version", "Show version") do
-          puts Gingerice::VERSION
-          exit
+          options[:show] = :version
         end
 
         opt.on_tail("-h", "--help", "Show this message") do
-          puts opt
-          exit
+          options[:show] = :help
         end
-      end
 
-      @oparser.parse!(args)
-      options
+        opt.parse!(args)
+      end
     end
 
     def execute
-      options = processor
+      if options.has_key?(:show)
 
-      if args.empty?
-        puts oparser
+        case options[:show]
+        when :help
+          puts args_parser
+        when :version
+          puts "Gingerice: #{Gingerice::VERSION}"
+        end
+
       else
-        parser_options = options.reject { |key, value| key == :verbose }
-
-        parser   = Parser.new(parser_options)
-        response = parser.parse(args.last)
+        parser_opts = options.select { |k, _| Parser.default_options.keys.include?(k) }
+        parser      = Parser.new(parser_opts)
+        response    = parser.parse(args.last)
 
         if options[:verbose]
           ap response
