@@ -13,11 +13,7 @@ module Gingerice
     end
 
     def processor
-      options = {}
-      options[:api_endpoint] = Gingerice::Parser::GINGER_ENDPOINT
-      options[:api_version] = Gingerice::Parser::GINGER_VERSION
-      options[:api_key] = Gingerice::Parser::GINGER_API_KEY
-      options[:lang] = Gingerice::Parser::DEFAULT_LANG
+      options = Gingerice::Parser.default_options
       options[:verbose] = false
 
       @oparser = OptionParser.new do |opt|

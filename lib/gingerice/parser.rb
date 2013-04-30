@@ -4,18 +4,17 @@ require 'json'
 
 module Gingerice
   class Parser
-    GINGER_ENDPOINT = 'http://services.gingersoftware.com/Ginger/correct/json/GingerTheText'
-    GINGER_VERSION  = '2.0'
-    GINGER_API_KEY  = '6ae0c3a0-afdc-4532-a810-82ded0054236'
-    DEFAULT_LANG    = 'US'
+    GINGER_API_ENDPOINT = 'http://services.gingersoftware.com/Ginger/correct/json/GingerTheText'
+    GINGER_API_VERSION  = '2.0'
+    GINGER_API_KEY      = '6ae0c3a0-afdc-4532-a810-82ded0054236'
+    DEFAULT_LANG        = 'US'
 
-    attr_reader :lang, :api_key, :api_version, :api_endpoint
+    attr_accessor :lang, :api_key, :api_version, :api_endpoint
 
     def initialize(options = {})
-      @lang         = options.fetch(:lang, DEFAULT_LANG)
-      @api_key      = options.fetch(:api_key, GINGER_API_KEY)
-      @api_version  = options.fetch(:api_version, GINGER_VERSION)
-      @api_endpoint = options.fetch(:api_endpoint, GINGER_ENDPOINT)
+      merge_options(options).each do |key, value|
+        send("#{key}=", value)
+      end
     end
 
     def parse(text)
@@ -31,7 +30,24 @@ module Gingerice
       end
     end
 
+    def self.default_options
+      {
+        :api_endpoint => Gingerice::Parser::GINGER_API_ENDPOINT,
+        :api_version  => Gingerice::Parser::GINGER_API_VERSION,
+        :api_key      => Gingerice::Parser::GINGER_API_KEY,
+        :lang         => Gingerice::Parser::DEFAULT_LANG
+      }
+    end
+
     protected
+    def merge_options(options)
+      options.select! do |key, _|
+        Parser.default_options.include?(key)
+      end
+
+      Parser.default_options.merge(options)
+    end
+
     def response_processor(text, content)
       data = JSON.parse(content)
       i = 0
@@ -67,8 +83,8 @@ module Gingerice
 
     def request_params
       {
-        'lang' => lang,
-        'apiKey' => api_key,
+        'lang'          => lang,
+        'apiKey'        => api_key,
         'clientVersion' => api_version
       }
     end

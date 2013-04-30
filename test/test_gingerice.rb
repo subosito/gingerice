@@ -1,5 +1,12 @@
+require 'simplecov'
 require 'coveralls'
-Coveralls.wear!
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+  SimpleCov::Formatter::HTMLFormatter,
+  Coveralls::SimpleCov::Formatter
+]
+
+SimpleCov.start
 
 require 'stringio'
 module Kernel
@@ -30,8 +37,8 @@ class TestGingerice < Test::Unit::TestCase
   end
 
   def test_default_settings
-    assert_equal Gingerice::Parser::GINGER_ENDPOINT, @parser.api_endpoint
-    assert_equal Gingerice::Parser::GINGER_VERSION, @parser.api_version
+    assert_equal Gingerice::Parser::GINGER_API_ENDPOINT, @parser.api_endpoint
+    assert_equal Gingerice::Parser::GINGER_API_VERSION, @parser.api_version
     assert_equal Gingerice::Parser::GINGER_API_KEY, @parser.api_key
     assert_equal Gingerice::Parser::DEFAULT_LANG, @parser.lang
   end
