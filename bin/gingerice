@@ -4,6 +4,10 @@ $:.unshift(File::join(File::dirname(File::dirname(__FILE__)), "lib"))
 
 require 'gingerice/command'
 
-command = Gingerice::Command.new(ARGV)
-command.execute
+begin
+  command = Gingerice::Command.new(ARGV)
+  command.execute
+rescue Exception => e
+  puts e.message
+end
 

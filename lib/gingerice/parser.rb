@@ -55,8 +55,8 @@ module Gingerice
         open(uri) do |stream|
           @raw_response = stream.read
         end
-      rescue Exception => e
-        raise ConnectionError, e.message
+      rescue Exception => _
+        raise ConnectionError, "ERROR: Couldn't connect to API endpoint (#{api_endpoint})"
       end
     end
 
@@ -81,8 +81,8 @@ module Gingerice
           'result'      => result,
           'corrections' => @corrections
         }
-      rescue Exception => e
-        raise ParseError, e.message
+      rescue Exception => _
+        raise ParseError, "ERROR: We receive invalid JSON format!"
       end
     end
 
