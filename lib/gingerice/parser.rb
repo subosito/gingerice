@@ -12,12 +12,15 @@ module Gingerice
     DEFAULT_LANG        = 'US'
 
     attr_accessor :lang, :api_key, :api_version, :api_endpoint
-    attr_reader   :text, :raw_response
+    attr_reader   :text, :raw_response, :result
 
     def initialize(options = {})
       merge_options(options).each do |key, value|
         send("#{key}=", value)
       end
+
+      @result      = ''
+      @corrections = []
     end
 
     def parse(text)
@@ -59,44 +62,51 @@ module Gingerice
 
     def process_response
       begin
-        data = JSON.parse(raw_response)
+        json_data = JSON.parse(raw_response)
+
         i = 0
-        result = ''
-        corrections = []
 
-        data.fetch('LightGingerTheTextResult', []).each do |r|
-          from = r['From']
-          to   = r['To']
+        json_data.fetch('LightGingerTheTextResult', []).each do |data|
+          process_suggestions(i, data)
 
-          if i <= from
-            result += text[i..from-1] unless from.zero?
-            result += r['Suggestions'][0]['Text']
-
-            definition = r['Suggestions'][0]['Definition']
-
-            if definition.respond_to? :empty?
-              definition = nil if definition.empty?
-            end
-
-            corrections << {
-              'text'       => text[from..to],
-              'correct'    => r['Suggestions'][0]['Text'],
-              'definition' => definition,
-              'start'      => from,
-              'length'     => to.to_i - from.to_i + 1
-            }
-          end
-
-          i = to+1
+          i = data['To']+1
         end
 
         if i < text.length
-          result += text[i..-1]
+          @result += text[i..-1]
         end
 
-        { 'text' => text, 'result' => result, 'corrections' => corrections}
+        {
+          'text'        => text,
+          'result'      => result,
+          'corrections' => @corrections
+        }
       rescue Exception => e
         raise ParseError, e.message
+      end
+    end
+
+    def process_suggestions(i, data)
+      from = data['From']
+      to   = data['To']
+
+      if i <= from
+        @result += text[i..from-1] unless from.zero?
+        @result += data['Suggestions'][0]['Text']
+
+        definition = data['Suggestions'][0]['Definition']
+
+        if definition.respond_to? :empty?
+          definition = nil if definition.empty?
+        end
+
+        @corrections << {
+          'text'       => text[from..to],
+          'correct'    => data['Suggestions'][0]['Text'],
+          'definition' => definition,
+          'start'      => from,
+          'length'     => to.to_i - from.to_i + 1
+        }
       end
     end
 
