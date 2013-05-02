@@ -118,6 +118,7 @@ $ gingerice --verbose "Edwards will be sck yesterday"
 
 ## Ports
 
+- PHP library by @Aitboudad: https://github.com/Aitboudad/GingerLight.git
 - Python library by @Azd325: https://github.com/Azd325/gingerit
 
 ## Thanks
