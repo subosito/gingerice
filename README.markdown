@@ -1,4 +1,10 @@
-# Gingerice [![Gem Version](https://badge.fury.io/rb/gingerice.png)](http://badge.fury.io/rb/gingerice) [![Build Status](https://travis-ci.org/subosito/gingerice.png)](https://travis-ci.org/subosito/gingerice) [![Coverage Status](https://coveralls.io/repos/subosito/gingerice/badge.png)](https://coveralls.io/r/subosito/gingerice) [![Dependency Status](https://gemnasium.com/subosito/gingerice.png)](https://gemnasium.com/subosito/gingerice) [![Code Climate](https://codeclimate.com/github/subosito/gingerice.png)](https://codeclimate.com/github/subosito/gingerice)
+# Gingerice
+
+[![Gem Version](https://badge.fury.io/rb/gingerice.png)](http://badge.fury.io/rb/gingerice)
+[![Build Status](https://travis-ci.org/subosito/gingerice.png)](https://travis-ci.org/subosito/gingerice)
+[![Coverage Status](https://coveralls.io/repos/subosito/gingerice/badge.png)](https://coveralls.io/r/subosito/gingerice)
+[![Dependency Status](https://gemnasium.com/subosito/gingerice.png)](https://gemnasium.com/subosito/gingerice)
+[![Code Climate](https://codeclimate.com/github/subosito/gingerice.png)](https://codeclimate.com/github/subosito/gingerice)
 
 Ruby wrapper of Ginger Proofreader which corrects spelling and grammar mistakes based on the context of complete sentences by comparing each sentence to billions of similar sentences from the web.
 
