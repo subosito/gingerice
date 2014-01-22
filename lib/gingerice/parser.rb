@@ -91,22 +91,24 @@ module Gingerice
       to   = data['To']
 
       if i <= from
-        @result += text[i..from-1] unless from.zero?
-        @result += data['Suggestions'][0]['Text']
+        @result   += text[i..from-1] unless from.zero?
+        suggestion = data['Suggestions'].first
 
-        definition = data['Suggestions'][0]['Definition']
+        if suggestion
+          suggestion_text = suggestion['Text']
+          @result += suggestion_text
 
-        if definition.respond_to? :empty?
-          definition = nil if definition.empty?
+          definition = suggestion['Definition']
+          definition = nil if definition.respond_to?(:empty?) && definition.empty?
+
+          @corrections << {
+            'text'       => text[from..to],
+            'correct'    => suggestion_text,
+            'definition' => definition,
+            'start'      => from,
+            'length'     => to - from + 1
+          }
         end
-
-        @corrections << {
-          'text'       => text[from..to],
-          'correct'    => data['Suggestions'][0]['Text'],
-          'definition' => definition,
-          'start'      => from,
-          'length'     => to - from + 1
-        }
       end
     end
 

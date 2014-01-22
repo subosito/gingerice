@@ -69,6 +69,14 @@ class TestGingerice < Test::Unit::TestCase
     assert_equal "Edwards was sick yesterday\n", output.string
   end
 
+  def test_command_simple_output_cryptic
+    output = capture_stdout do
+      command = Gingerice::Command.new([":tco"])
+      command.execute
+    end
+    assert_equal ": \n", output.string
+  end
+
   def test_command_verbose_output
     output = capture_stdout do
       command = Gingerice::Command.new(["-v", "He flyed to Jakarta"])
