@@ -1,10 +1,10 @@
 require 'simplecov'
 require 'coveralls'
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
   SimpleCov::Formatter::HTMLFormatter,
   Coveralls::SimpleCov::Formatter
-]
+])
 
 SimpleCov.start
 
@@ -30,7 +30,7 @@ class TestGingerice < Test::Unit::TestCase
 
     @custom_parser = Gingerice::Parser.new({
       lang: 'ID',
-      api_endpoint: 'http://example.id/',
+      api_endpoint: 'http://foo.bar/',
       api_version: '1.0',
       api_key: '123456'
     })
@@ -45,7 +45,7 @@ class TestGingerice < Test::Unit::TestCase
 
   def test_override_settings
     assert_equal 'ID', @custom_parser.lang
-    assert_equal 'http://example.id/', @custom_parser.api_endpoint
+    assert_equal 'http://foo.bar/', @custom_parser.api_endpoint
     assert_equal '1.0', @custom_parser.api_version
     assert_equal '123456', @custom_parser.api_key
   end
@@ -102,10 +102,10 @@ class TestGingerice < Test::Unit::TestCase
   end
 
   def test_command_arg_api_endpoint
-    command = Gingerice::Command.new(['--api-endpoint', 'http://example.id/'])
+    command = Gingerice::Command.new(['--api-endpoint', 'http://foo.bar/'])
     options = command.options
 
-    assert_equal "http://example.id/", options[:api_endpoint]
+    assert_equal "http://foo.bar/", options[:api_endpoint]
   end
 
   def test_command_arg_api_version
@@ -131,12 +131,12 @@ class TestGingerice < Test::Unit::TestCase
 
   def test_request_exceptions
     exception = assert_raise(Gingerice::ConnectionError) { @custom_parser.parse('Hllo') }
-    assert_equal "ERROR: Couldn't connect to API endpoint (http://example.id/)", exception.message
+    assert_equal "ERROR: Couldn't connect to API endpoint (http://foo.bar/)", exception.message
   end
 
   def test_parse_error_exceptions
     invalid_parser = Gingerice::Parser.new({
-      api_endpoint: 'http://subosito.com/',
+      api_endpoint: 'https://subosito.com/',
     })
 
     exception = assert_raise(Gingerice::ParseError) { invalid_parser.parse('Hllo') }
