@@ -69,8 +69,6 @@ module Gingerice
             options[:output] = :verbose
           when 'count'
             options[:output] = :count
-          else
-            options[:output] = :simple
           end
         end
 

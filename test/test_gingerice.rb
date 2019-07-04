@@ -77,6 +77,14 @@ class TestGingerice < Test::Unit::TestCase
     assert_equal ": \n", output.string
   end
 
+  def test_command_verbose_output_deprecated
+    output = capture_stdout do
+      command = Gingerice::Command.new(["--verbose", "He flyed to Jakarta"])
+      command.execute
+    end
+    assert_match 'corrections', output.string
+  end
+
   def test_command_verbose_output
     output = capture_stdout do
       command = Gingerice::Command.new(["--output", "verbose", "He flyed to Jakarta"])
@@ -145,6 +153,16 @@ class TestGingerice < Test::Unit::TestCase
   def test_parse_error_exceptions
     invalid_parser = Gingerice::Parser.new({
       api_endpoint: 'https://subosito.com/',
+    })
+
+    exception = assert_raise(Gingerice::ParseError) { invalid_parser.parse('Hllo') }
+    assert_equal 'ERROR: We receive invalid JSON format!', exception.message
+  end
+
+  def test_parse_error_exceptions_output_count
+    invalid_parser = Gingerice::Parser.new({
+      api_endpoint: 'https://subosito.com/',
+      output: :count
     })
 
     exception = assert_raise(Gingerice::ParseError) { invalid_parser.parse('Hllo') }
