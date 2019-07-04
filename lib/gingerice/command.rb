@@ -11,7 +11,7 @@ module Gingerice
       @args = args
       @args << '-h' if @args.empty?
 
-      @options     = Gingerice::Parser.default_options.merge({ :verbose => false })
+      @options     = Gingerice::Parser.default_options.merge({ :output => :simple })
       @args_parser = parse_args
     end
 
@@ -30,10 +30,10 @@ module Gingerice
         parser      = Parser.new(parser_opts)
         response    = parser.parse(args.last)
 
-        if options[:verbose]
+        if options[:output] === :verbose
           ap response
         else
-          puts response["result"]
+          puts response
         end
       end
     end
@@ -59,8 +59,19 @@ module Gingerice
           options[:lang] = lang
         end
 
-        opt.on("-v", "--verbose", "Verbose output") do
-          options[:verbose] = true
+        opt.on("-v", "--verbose", "Verbose output (deprecated: use --output verbose, instead)") do
+          options[:output] = :verbose
+        end
+
+        opt.on("-o", "--output OUTPUT", "Output type") do |output|
+          case output
+          when 'verbose'
+            options[:output] = :verbose
+          when 'count'
+            options[:output] = :count
+          else
+            options[:output] = :simple
+          end
         end
 
         opt.on("--version", "Show version") do

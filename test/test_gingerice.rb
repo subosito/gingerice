@@ -79,10 +79,18 @@ class TestGingerice < Test::Unit::TestCase
 
   def test_command_verbose_output
     output = capture_stdout do
-      command = Gingerice::Command.new(["-v", "He flyed to Jakarta"])
+      command = Gingerice::Command.new(["--output", "verbose", "He flyed to Jakarta"])
       command.execute
     end
     assert_match 'corrections', output.string
+  end
+
+  def test_command_count_output
+    output = capture_stdout do
+      command = Gingerice::Command.new(["--output", "count", "Edwards will be sck yesterday"])
+      command.execute
+    end
+    assert_equal "2\n", output.string
   end
 
   def test_command_help_usage

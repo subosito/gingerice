@@ -11,7 +11,7 @@ module Gingerice
     GINGER_API_KEY      = '6ae0c3a0-afdc-4532-a810-82ded0054236'
     DEFAULT_LANG        = 'US'
 
-    attr_accessor :lang, :api_key, :api_version, :api_endpoint
+    attr_accessor :lang, :api_key, :api_version, :api_endpoint, :output
     attr_reader   :text, :raw_response, :result
 
     def initialize(options = {})
@@ -26,7 +26,16 @@ module Gingerice
     def parse(text)
       @text = text
       perform_request
-      process_response
+
+      case output
+      when :verbose
+        process_response
+      when :simple
+        process_response
+        result
+      when :count
+        process_count_response
+      end
     end
 
     def self.default_options
@@ -34,7 +43,8 @@ module Gingerice
         :api_endpoint => GINGER_API_ENDPOINT,
         :api_version  => GINGER_API_VERSION,
         :api_key      => GINGER_API_KEY,
-        :lang         => DEFAULT_LANG
+        :lang         => DEFAULT_LANG,
+        :output       => :verbose
       }
     end
 
@@ -57,6 +67,15 @@ module Gingerice
         end
       rescue Exception => _
         raise ConnectionError, "ERROR: Couldn't connect to API endpoint (#{api_endpoint})"
+      end
+    end
+
+    def process_count_response
+      begin
+        json_data = JSON.parse(raw_response)
+        json_data.fetch('LightGingerTheTextResult', []).length
+      rescue Exception => _
+        raise ParseError, "ERROR: We receive invalid JSON format!"
       end
     end
 
